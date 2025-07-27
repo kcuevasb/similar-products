@@ -86,7 +86,7 @@ The application separates concerns clearly across hexagonal boundaries:
 ### 1️⃣ Clone the Repo
 
 ```bash
-git clone https://github.com/your-org/similar-products-api.git
+git clone https://github.com/kcuevasb/similar-products.git
 cd similar-products-api
 ```
 
