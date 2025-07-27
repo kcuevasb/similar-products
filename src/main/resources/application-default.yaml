@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: similar-products
+
+server:
+  port: 5000
+  error:
+    include-stacktrace: ALWAYS
+
+external:
+  api:
+    base-url: http://localhost:3001
+
+logging:
+  level:
+    root: INFO
+    com.inditex.similar_products: DEBUG
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: health,info,circuitbreakerevents,circuitbreakers
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      productApiCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 2
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+
+  retry:
+    instances:
+      productApiCircuitBreaker:
+        maxAttempts: 3
+        waitDuration: 200ms
+
+  ratelimiter:
+    instances:
+      productApiRateLimiter:
+        limitForPeriod: 10
+        limitRefreshPeriod: 5s
+        timeoutDuration: 0

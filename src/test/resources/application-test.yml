@@ -1,0 +1,39 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: similar-products-test
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 1
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+    instances:
+      productApiCircuitBreaker:
+        base-config: default
+
+  retry:
+    instances:
+      productApiCircuitBreaker:
+        maxAttempts: 3
+        waitDuration: 10ms
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 1.5
+
+  ratelimiter:
+    instances:
+      productApiRateLimiter:
+        limitForPeriod: 3
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
+
+logging:
+  level:
+    root: WARN
+    com.inditex.similar_products: DEBUG
